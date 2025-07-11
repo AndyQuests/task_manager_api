@@ -1,0 +1,10 @@
+# Ignore virtual environment
+fastapi_taskmanager_july2025/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# IDE settings (optional)
+.vscode/
+.idea/
