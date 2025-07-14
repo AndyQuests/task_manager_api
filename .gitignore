@@ -8,3 +8,6 @@ __pycache__/
 # IDE settings (optional)
 .vscode/
 .idea/
+
+# Ignore my learning notes
+learning_log.md
