@@ -1,25 +1,36 @@
 from fastapi.testclient import TestClient
-from main import app
+from main import app, tasks
 
 client = TestClient(app)
 
-# Test creating a single task (POST /tasks) 
+# Reset the list before each test
+def setup_function():
+    tasks.clear()
+
+# Test creating a task (POST /tasks) 
 def test_create_task():
     # Create a task to retrieve
     response = client.post("/tasks", json ={
         "id" : 1,
         "title" : "Test task",
-        "description" : "Unit test",
+        "description" : "Added for retrieval",
         "completed" : False
     })
-    print(response.json())  # 👈 Debug print
+
     assert response.status_code == 200
     assert response.json()["title"] == "Test task"
 
 # Test retreiving all tasks (GET /tasks) 
 def test_get_tasks():
+    # Create a task to retrieve
+    response = client.post("/tasks", json ={
+        "id" : 1,
+        "title" : "Test task",
+        "description" : "Added for retrieval",
+        "completed" : False
+    })
+
     response = client.get("/tasks")
-    print(response.json())  # 👈 Debug print
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     assert any(task["title"] == "Test task" for task in response.json())
