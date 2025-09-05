@@ -20,7 +20,6 @@ class Task(BaseModel):
     id: int
     title: str
     description: Optional[str] = None
-    completed: bool = False
     status: TaskStatus = TaskStatus.pending
 
 # Welcome route :)
@@ -42,12 +41,18 @@ async def get_task_by_id(task_id: int):
     raise HTTPException(status_code=404, detail="Task not found")
 
 # Create a new task
+class TaskCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+
 @app.post("/tasks")
-async def create_task(task: Task):
+async def create_task(task_data: TaskCreate):
+    task_id = len(tasks) + 1 # generate ID dinamically
+    task = Task(id=task_id, title=task_data.title, description=task_data.description)
     tasks.append(task)
     return task
 
-# Add PATCH endpoint to update a task's status
+# PATCH endpoint to update a task's status
 @app.patch("/tasks/{task_id}/status")
 async def update_task_status(task_id:int, status: TaskStatus):
     for task in tasks:

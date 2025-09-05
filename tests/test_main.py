@@ -11,10 +11,8 @@ def setup_function():
 def test_create_task():
     # Create a task to retrieve
     response = client.post("/tasks", json ={
-        "id" : 1,
         "title" : "Test task",
         "description" : "Added for retrieval",
-        "completed" : False
     })
 
     assert response.status_code == 200
@@ -24,10 +22,8 @@ def test_create_task():
 def test_get_tasks():
     # Create a task to retrieve
     response = client.post("/tasks", json ={
-        "id" : 1,
         "title" : "Test task",
         "description" : "Added for retrieval",
-        "completed" : False
     })
 
     response = client.get("/tasks")
@@ -38,14 +34,13 @@ def test_get_tasks():
 # Test retrieving a single task by ID (GET /tasks/{id})
 def test_get_task_by_id():
     # Create a task to retrieve
-    client.post("/tasks", json={
-        "id": 2,
+    create_response = client.post("/tasks", json={
         "title": "Task by ID",
         "description": "Testing GET by ID",
-        "completed": False
     })
-
-    response = client.get("/tasks/2")
+    task_id = create_response.json()["id"]
+    # Fetch the task by that id
+    response = client.get(f"/tasks/{task_id}")
     assert response.status_code == 200
     assert response.json()["title"] == "Task by ID"
 
