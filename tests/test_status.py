@@ -20,12 +20,12 @@ def test_update_task_status():
         "description": "Testing status update",
     })
 
-    response = client.patch("/tasks/1/status?status=in_progress")
+    response = client.patch("/tasks/1/status", json={"status": "in_progress"})
     assert response.status_code == 200
     assert response.json()["status"] == "in_progress"
 
 def test_update_status_invalid_id():
-    response = client.patch("/tasks/999/status?status=completed")
+    response = client.patch("/tasks/999/status", json={"status": "completed"})
     assert response.status_code == 404
 
 def test_update_status_invalid_value():
@@ -34,7 +34,7 @@ def test_update_status_invalid_value():
         "description": "Try invalid status"
     })
 
-    response = client.patch("/tasks/1/status?status=paused")
+    response = client.patch("/tasks/1/status", json={"status": "paused"})
     assert response.status_code == 422
 
 
