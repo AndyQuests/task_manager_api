@@ -3,6 +3,7 @@ from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
 from pydantic import BaseModel  # Pydantic handles input validation
 from typing import Optional, List # Let us use Optional, List parameter types
 from enum import Enum # Set symbolic names bound to unique values
+import asyncio
 
 # ---------------------
 #      1. MODELS
@@ -47,11 +48,13 @@ async def read_root():
 # Get all tasks
 @ app.get("/tasks", response_model=List[Task])
 async def get_tasks():
+    await asyncio.sleep(0.1)
     return tasks.values() ### < check
 
 # Fetch a single task by ID
 @app.get("/tasks/{task_id}", response_model=Task)
 async def get_task_by_id(task_id: int): 
+    await asyncio.sleep(0.1) # simulate DB latency
     if task_id in tasks:
         return tasks[task_id]
     raise HTTPException(status_code=404, detail="Task not found")
@@ -59,6 +62,7 @@ async def get_task_by_id(task_id: int):
 # Create a new task
 @app.post("/tasks", response_model=Task)
 async def create_task(task_data: TaskCreate):
+    await asyncio.sleep(0.3) # simulate DB write delay
     task_id = len(tasks) + 1 # generate ID dinamically
     new_task = Task(id=task_id, title=task_data.title, description=task_data.description)
     tasks[task_id] = new_task
@@ -67,6 +71,7 @@ async def create_task(task_data: TaskCreate):
 # PATCH endpoint to update a task's status
 @app.patch("/tasks/{task_id}/status", response_model=Task)
 async def update_task_status(task_id:int, update: TaskUpdate):
+    await asyncio.sleep(0.2)
     if task_id in tasks:
         tasks[task_id].status = update.status
         return tasks[task_id]
