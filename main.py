@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path
 from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
-from pydantic import BaseModel  # Pydantic handles input validation
+from pydantic import BaseModel, Field  # Pydantic handles input validation
 from typing import Optional, List # Let us use Optional, List parameter types
 from enum import Enum # Set symbolic names bound to unique values
 import asyncio
@@ -21,11 +21,13 @@ class Task(BaseModel):
     status: TaskStatus = TaskStatus.pending
 
 class TaskCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
+    title: str = Field(min_length=1, max_length=100)
+    description: str| None = Field(default=None, min_length=1, max_length=300)
 
 class TaskUpdate(BaseModel):
-    status: TaskStatus
+    title: str | None = Field(default=None, min_length=1, max_length=100)
+    description: str | None = Field(default=None, min_length=1, max_length=300)
+    status: TaskStatus | None = None
 
 
 # ---------------------
