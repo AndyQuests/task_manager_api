@@ -70,11 +70,28 @@ async def create_task(task_data: TaskCreate):
     tasks[task_id] = new_task
     return new_task
 
-# PATCH endpoint to update a task's status
-@app.patch("/tasks/{task_id}/status", response_model=Task)
+# PATCH endpoint to update a task
+@app.patch("/tasks/{task_id}", response_model=Task)
 async def update_task_status(task_id:int, update: TaskUpdate):
     await asyncio.sleep(0.2)
-    if task_id in tasks:
-        tasks[task_id].status = update.status
-        return tasks[task_id]
-    raise HTTPException(status_code=404, detail= "Task not found")
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail= "Task not found")    
+    
+    stored_task = tasks[task_id]
+
+    if update.title:
+        stored_task.title = update.title
+    if update.description:
+        stored_task.description = update.description
+    if update.status:
+        stored_task.status = update.status
+
+    return stored_task
+
+@app.delete("/tasks/{task_id}", response_model=dict)
+async def delete_task(task_id: int):
+    await asyncio.sleep(0.2)
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    del tasks[task_id]
+    return {"message": "Task deleted successfully"}
