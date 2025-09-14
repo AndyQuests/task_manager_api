@@ -11,3 +11,6 @@ __pycache__/
 
 # Ignore my learning notes
 learning_log.md
+
+# macOS system files
+.DS_Store
