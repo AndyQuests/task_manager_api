@@ -1,37 +1,11 @@
-from fastapi import FastAPI, Path
+from fastapi import FastAPI
 from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
-from pydantic import BaseModel, Field  # Pydantic handles input validation
-from typing import Optional, List # Let us use Optional, List parameter types
-from enum import Enum # Set symbolic names bound to unique values
+from typing import List # Let us use List parameter types
 import asyncio
+from models import Task, TaskCreate, TaskUpdate
 
 # ---------------------
-#      1. MODELS
-# ---------------------
-
-class TaskStatus(str, Enum):
-    pending = "pending"
-    in_progress = "in_progress"
-    completed = "completed"
-
-class Task(BaseModel): 
-    id: int
-    title: str
-    description: Optional[str] = None
-    status: TaskStatus = TaskStatus.pending
-
-class TaskCreate(BaseModel):
-    title: str = Field(min_length=1, max_length=100)
-    description: str| None = Field(default=None, min_length=1, max_length=300)
-
-class TaskUpdate(BaseModel):
-    title: str | None = Field(default=None, min_length=1, max_length=100)
-    description: str | None = Field(default=None, min_length=1, max_length=300)
-    status: TaskStatus | None = None
-
-
-# ---------------------
-#       2. APP + STORAGE
+#       1. APP + STORAGE
 # ---------------------
 
 app = FastAPI()
@@ -39,7 +13,7 @@ tasks : dict[int, Task] = {}
 
 
 # ---------------------
-#       3. ENDPOINTS
+#       2. ENDPOINTS
 # ---------------------
 
 # Welcome route :)
@@ -66,7 +40,9 @@ async def get_task_by_id(task_id: int):
 async def create_task(task_data: TaskCreate):
     await asyncio.sleep(0.3) # simulate DB write delay
     task_id = len(tasks) + 1 # generate ID dinamically
-    new_task = Task(id=task_id, title=task_data.title, description=task_data.description)
+    new_task = Task(id=task_id, 
+                    title=task_data.title, 
+                    description=task_data.description)
     tasks[task_id] = new_task
     return new_task
 
