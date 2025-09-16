@@ -1,5 +1,5 @@
 # Ignore virtual environment
-fastapi_taskmanager_july2025/
+fastapi_taskmanager_july2025_env/
 
 # Python cache files
 __pycache__/
@@ -14,3 +14,6 @@ learning_log.md
 
 # macOS system files
 .DS_Store
+
+# Ignore performance data visualization file
+performance_plot.ipynb
