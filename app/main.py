@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
 from typing import List # Let us use List parameter types
 import asyncio
-from models import Task, TaskCreate, TaskUpdate
+from app.models import Task, TaskCreate, TaskUpdate
 
 # ---------------------
 #       1. APP + STORAGE
