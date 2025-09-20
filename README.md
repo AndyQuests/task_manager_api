@@ -39,7 +39,6 @@
     main.py        → FastAPI app & routes
     models.py      → Pydantic models
     tests/
-      test_main.py
       test_validation.py
       test_tasks.py
   ```
@@ -50,9 +49,8 @@
   * Validation handled by Pydantic (string coercion, min/max lengths).
   * Tests split by responsibility:
 
-    * `test_main.py`: core CRUD
     * `test_validation.py`: input validation
-    * `test_tasks.py`: task-specific flows
+    * `test_tasks.py`: core CRUD
 
     For more details on the testing strategy, 
     see [app/tests/README.md](app/tests/README.md).
