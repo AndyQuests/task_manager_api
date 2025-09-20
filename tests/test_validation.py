@@ -38,7 +38,7 @@ def test_create_task_accepts_no_description():
     })
     assert response.status_code == 200
 
-def test_create_task_accepts_empty_description():
+def test_create_task_rejects_empty_description():
     response = client.post("/tasks", json={
         "title": "empty-description-provided",
         "description": ""
@@ -70,7 +70,9 @@ def test_update_task_rejects_empty_title():
         "title": "empty-title-update",
     })
 
-    response = client.patch("/tasks/1", json={"title": ""})
+    response = client.patch("/tasks/1", json={
+        "title": ""
+        })
     assert response.status_code == 422
 
 def test_update_task_rejects_too_long_title():
@@ -79,7 +81,9 @@ def test_update_task_rejects_too_long_title():
         "title": "too-long-title-update"
     })
 
-    response = client.patch("/tasks/1", json={"title": f"{long_title}"})    
+    response = client.patch("/tasks/1", json={
+        "title": f"{long_title}"
+        })    
     assert response.status_code == 422
 
 def test_update_task_rejects_empty_description():
@@ -112,7 +116,8 @@ def test_update_task_rejects_invalid_status():
     })
 
     response = client.patch("/tasks/1", json={
-        "status": "paused"})
+        "status": "paused"
+        })
     assert response.status_code == 422
 
 def test_update_task_accepts_no_fields():

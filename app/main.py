@@ -48,7 +48,7 @@ async def create_task(task_data: TaskCreate):
 
 # PATCH endpoint to update a task
 @app.patch("/tasks/{task_id}", response_model=Task)
-async def update_task_status(task_id:int, update: TaskUpdate):
+async def update_task(task_id:int, update: TaskUpdate):
     await asyncio.sleep(0.2)
     if task_id not in tasks:
         raise HTTPException(status_code=404, detail= "Task not found")    

@@ -29,14 +29,14 @@ def test_get_tasks():
         "title" : "Test task",
         "description" : "Added for retrieval",
     })
-
+    # Fetch all existing tasks
     response = client.get("/tasks")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     assert any(task["title"] == "Test task" for task in response.json())
 
 # Test retrieving a single task by ID (GET /tasks/{id})
-def test_get_task_by_id_sucess():
+def test_get_task_by_id_success():
     # Create a task to retrieve
     create_response = client.post("/tasks", json={
         "title": "Task by ID",
@@ -123,7 +123,7 @@ def test_update_non_existing_task():
 #   TEST DELETE
 # ===============
 
-def test_delete_task_sucess():
+def test_delete_task_success():
     client.post("/tasks", json={
         "title": "test-delete-task",
         "description": "test-delete-tasks"
