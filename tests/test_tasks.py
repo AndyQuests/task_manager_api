@@ -50,7 +50,7 @@ def test_get_task_by_id_success():
 
 # Test requesting a non-existent task ID
 def test_get_task_invalid_id():
-    response = client.get("tasks/999")
+    response = client.get("/tasks/999")
     assert response.status_code == 404
     assert response.json()["detail"] == "Task not found"
 
@@ -129,9 +129,9 @@ def test_delete_task_success():
         "description": "test-delete-tasks"
     })
     assert client.get("/tasks/1").status_code == 200
-    client.delete("tasks/1")
-    response = client.get("/tasks/1") 
-    assert response.status_code == 404
+    response = client.delete("/tasks/1")
+    assert response.status_code == 200
+    assert client.get("/tasks/1").status_code == 404
 
 def test_delete_task_non_existent():
     response = client.delete("/tasks/1")
