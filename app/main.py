@@ -11,9 +11,17 @@ from app.models import Task, TaskCreate, TaskUpdate
 app = FastAPI()
 tasks : dict[int, Task] = {}
 
+# ---------------------
+#       3. HELPER FUNCTIONS
+# ---------------------
+
+def get_task_or_404(task_id: int) -> Task:
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return tasks[task_id]
 
 # ---------------------
-#       2. ENDPOINTS
+#       3. ENDPOINTS
 # ---------------------
 
 # Welcome route :)
@@ -31,9 +39,8 @@ async def get_tasks():
 @app.get("/tasks/{task_id}", response_model=Task)
 async def get_task_by_id(task_id: int): 
     await asyncio.sleep(0.1) # simulate DB latency
-    if task_id in tasks:
-        return tasks[task_id]
-    raise HTTPException(status_code=404, detail="Task not found")
+    task = get_task_or_404(task_id)
+    return task
 
 # Create a new task
 @app.post("/tasks", response_model=Task)
@@ -50,10 +57,7 @@ async def create_task(task_data: TaskCreate):
 @app.patch("/tasks/{task_id}", response_model=Task)
 async def update_task(task_id:int, update: TaskUpdate):
     await asyncio.sleep(0.2)
-    if task_id not in tasks:
-        raise HTTPException(status_code=404, detail= "Task not found")    
-    
-    stored_task = tasks[task_id]
+    stored_task = get_task_or_404(task_id)
 
     if update.title:
         stored_task.title = update.title
@@ -67,7 +71,6 @@ async def update_task(task_id:int, update: TaskUpdate):
 @app.delete("/tasks/{task_id}", response_model=dict)
 async def delete_task(task_id: int):
     await asyncio.sleep(0.2)
-    if task_id not in tasks:
-        raise HTTPException(status_code=404, detail="Task not found")
+    get_task_or_404(task_id)
     del tasks[task_id]
     return {"message": "Task deleted successfully"}
