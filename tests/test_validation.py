@@ -1,26 +1,21 @@
-from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
-
 # ===============
 #   TEST CREATE
 # ===============
 
-def test_create_task_rejects_missing_title():
+def test_create_task_rejects_missing_title(client):
     response = client.post("/tasks", json={
         "description": "no-title",
     })
     assert response.status_code == 422 # 422 = Unprocessable Entity
 
-def test_create_task_rejects_empty_title():
+def test_create_task_rejects_empty_title(client):
     response = client.post("/tasks", json={
         "title": "",
         "description": "empty-title"
     })
     assert response.status_code == 422
 
-def test_create_task_rejects_too_long_title():
+def test_create_task_rejects_too_long_title(client):
     long_title = "x" * 101
     response = client.post("/tasks", json={
         "title": f"{long_title}",
@@ -28,20 +23,20 @@ def test_create_task_rejects_too_long_title():
     })    
     assert response.status_code == 422
 
-def test_create_task_accepts_no_description():
+def test_create_task_accepts_no_description(client):
     response = client.post("/tasks", json={
         "title": "no-description-provided"
     })
     assert response.status_code == 200
 
-def test_create_task_rejects_empty_description():
+def test_create_task_rejects_empty_description(client):
     response = client.post("/tasks", json={
         "title": "empty-description-provided",
         "description": ""
     })
     assert response.status_code == 422
 
-def test_create_task_rejects_too_long_description():
+def test_create_task_rejects_too_long_description(client):
     long_description = "x" * 301
     response = client.post("/tasks", json={
         "title": "Too-long-description",
@@ -49,7 +44,7 @@ def test_create_task_rejects_too_long_description():
     })
     assert response.status_code == 422
 
-def test_create_task_default_status_is_pending():
+def test_create_task_default_status_is_pending(client):
     response = client.post("/tasks", json={
         "title": "Test-default-status",
         "description": "status-not-specified"
@@ -61,7 +56,7 @@ def test_create_task_default_status_is_pending():
 #   TEST UPDATE
 # ===============
 
-def test_update_task_rejects_empty_title():
+def test_update_task_rejects_empty_title(client):
     client.post("/tasks", json={
         "title": "empty-title-update",
     })
@@ -71,7 +66,7 @@ def test_update_task_rejects_empty_title():
         })
     assert response.status_code == 422
 
-def test_update_task_rejects_too_long_title():
+def test_update_task_rejects_too_long_title(client):
     long_title = "x" * 101
     client.post("/tasks", json={
         "title": "too-long-title-update"
@@ -82,7 +77,7 @@ def test_update_task_rejects_too_long_title():
         })    
     assert response.status_code == 422
 
-def test_update_task_rejects_empty_description():
+def test_update_task_rejects_empty_description(client):
     client.post("/tasks", json={
         "title": "unchanged-title",
         "description": "empty-description-update"
@@ -93,7 +88,7 @@ def test_update_task_rejects_empty_description():
     })
     assert response.status_code == 422
 
-def test_update_task_rejects_too_long_description():
+def test_update_task_rejects_too_long_description(client):
     long_description = "x" * 301
     client.post("/tasks", json={
         "title": "unchanged-title",
@@ -105,7 +100,7 @@ def test_update_task_rejects_too_long_description():
     })
     assert response.status_code == 422
 
-def test_update_task_rejects_invalid_status():
+def test_update_task_rejects_invalid_status(client):
     client.post("/tasks", json={
         "title": "unchanged-title",
         "description": "unchanged-description"
@@ -116,7 +111,7 @@ def test_update_task_rejects_invalid_status():
         })
     assert response.status_code == 422
 
-def test_update_task_accepts_no_fields():
+def test_update_task_accepts_no_fields(client):
     client.post("/tasks", json={
         "title": "unchanged-title",
         "description": "unchanged-description"

@@ -1,10 +1,5 @@
-from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
-
 # Test creating a task (POST /tasks) 
-def test_create_task():
+def test_create_task(client):
     # Create a task to retrieve
     response = client.post("/tasks", json ={
         "title" : "Test task",
@@ -19,7 +14,7 @@ def test_create_task():
 # ===============
 
 # Test retreiving all tasks (GET /tasks) 
-def test_get_tasks():
+def test_get_tasks(client):
     # Create a task to retrieve
     response = client.post("/tasks", json ={
         "title" : "Test task",
@@ -32,7 +27,7 @@ def test_get_tasks():
     assert any(task["title"] == "Test task" for task in response.json())
 
 # Test retrieving a single task by ID (GET /tasks/{id})
-def test_get_task_by_id_success():
+def test_get_task_by_id_success(client):
     # Create a task to retrieve
     create_response = client.post("/tasks", json={
         "title": "Task by ID",
@@ -45,7 +40,7 @@ def test_get_task_by_id_success():
     assert response.json()["title"] == "Task by ID"
 
 # Test requesting a non-existent task ID
-def test_get_task_invalid_id():
+def test_get_task_invalid_id(client):
     response = client.get("/tasks/999")
     assert response.status_code == 404
     assert response.json()["detail"] == "Task not found"
@@ -54,7 +49,7 @@ def test_get_task_invalid_id():
 #   TEST UPDATE
 # ===============
 
-def test_update_task_title_only():
+def test_update_task_title_only(client):
     client.post("/tasks", json={
         "title": "only-update-title",
         "description": "unchanged-description"
@@ -66,7 +61,7 @@ def test_update_task_title_only():
     assert response.json()["title"] == "updated-title"
     assert response.json()["description"] == "unchanged-description"
 
-def test_update_task_description_only():
+def test_update_task_description_only(client):
     client.post("/tasks", json={
         "title": "unchanged-title",
         "description": "only-update-this-description"
@@ -79,7 +74,7 @@ def test_update_task_description_only():
     assert response.json()["title"] == "unchanged-title"
     assert response.json()["description"] == "updated-description"
 
-def test_update_task_status_only():
+def test_update_task_status_only(client):
     client.post("/tasks", json={
         "title": "unchanged-title",
         "description": "unchanged-description",
@@ -91,7 +86,7 @@ def test_update_task_status_only():
     assert response.json()["description"] == "unchanged-description"
     assert response.json()["status"] == "in_progress"
 
-def test_update_task_multiple_fields():
+def test_update_task_multiple_fields(client):
     client.post("/tasks", json={
         "title": "updating-multiple-fields",
         "description": "running-updates",
@@ -107,7 +102,7 @@ def test_update_task_multiple_fields():
     assert response.json()["description"] == "updated-description"
     assert response.json()["status"] == "completed"
 
-def test_update_non_existing_task():
+def test_update_non_existing_task(client):
     response = client.patch("/tasks/999", json={
         "title": "updated-title",
         "description": "updated-description",
@@ -119,7 +114,7 @@ def test_update_non_existing_task():
 #   TEST DELETE
 # ===============
 
-def test_delete_task_success():
+def test_delete_task_success(client):
     client.post("/tasks", json={
         "title": "test-delete-task",
         "description": "test-delete-tasks"
@@ -129,11 +124,11 @@ def test_delete_task_success():
     assert response.status_code == 200
     assert client.get("/tasks/1").status_code == 404
 
-def test_delete_task_non_existent():
+def test_delete_task_non_existent(client):
     response = client.delete("/tasks/1")
     assert response.status_code == 404
 
-def test_delete_task_twice():
+def test_delete_task_twice(client):
     client.post("/tasks", json={
         "title": "test-delete-twice",
         "description": "test-delete-twice"
