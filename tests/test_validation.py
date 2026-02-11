@@ -1,11 +1,7 @@
 from fastapi.testclient import TestClient
-from app.main import app, tasks
+from app.main import app
 
 client = TestClient(app)
-
-# Reset list before each test
-def setup_function():
-    tasks.clear()
 
 # ===============
 #   TEST CREATE
