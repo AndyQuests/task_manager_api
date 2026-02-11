@@ -3,13 +3,13 @@ from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
 from typing import List # Let us use List parameter types
 import asyncio
 from app.models import Task, TaskCreate, TaskUpdate
+from app.storage import tasks
 
 # ---------------------
-#       1. APP + STORAGE
+#       1. APP 
 # ---------------------
 
 app = FastAPI()
-tasks : dict[int, Task] = {}
 
 # ---------------------
 #       3. HELPER FUNCTIONS
