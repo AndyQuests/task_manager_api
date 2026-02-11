@@ -4,7 +4,7 @@
 
   ```bash
   git clone <repo-url>
-  cd task-manager
+  cd task_manager
   pip install -r requirements.txt
   uvicorn app.main:app --reload
   ```
@@ -38,9 +38,9 @@
   app/
     main.py        → FastAPI app & routes
     models.py      → Pydantic models
-    tests/
-      test_validation.py
-      test_tasks.py
+  tests/
+    test_validation.py  → Data validation
+    test_tasks.py       → Test CRUD
   ```
 
 * **Design choices**

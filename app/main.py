@@ -24,25 +24,21 @@ def get_task_or_404(task_id: int) -> Task:
 #       3. ENDPOINTS
 # ---------------------
 
-# Welcome route :)
 @app.get("/")
 async def read_root():
     return {"message": "Hello, FastAPI!"}
 
-# Get all tasks
 @ app.get("/tasks", response_model=List[Task])
 async def get_tasks():
     await asyncio.sleep(0.1)
     return tasks.values() ### < check
 
-# Fetch a single task by ID
 @app.get("/tasks/{task_id}", response_model=Task)
 async def get_task_by_id(task_id: int): 
     await asyncio.sleep(0.1) # simulate DB latency
     task = get_task_or_404(task_id)
     return task
 
-# Create a new task
 @app.post("/tasks", response_model=Task)
 async def create_task(task_data: TaskCreate):
     await asyncio.sleep(0.3) # simulate DB write delay
@@ -53,8 +49,12 @@ async def create_task(task_data: TaskCreate):
     tasks[task_id] = new_task
     return new_task
 
-# PATCH endpoint to update a task
-@app.patch("/tasks/{task_id}", response_model=Task)
+@app.patch(
+        "/tasks/{task_id}",
+        summary="Update Task",
+        description="Partially updates a task. Only provided fields are modified",
+        response_model=Task
+        )
 async def update_task(task_id:int, update: TaskUpdate):
     await asyncio.sleep(0.2)
     stored_task = get_task_or_404(task_id)
