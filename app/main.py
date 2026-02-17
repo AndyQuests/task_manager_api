@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
 from typing import List # Let us use List parameter types
 import asyncio
 from app.models import Task, TaskCreate, TaskUpdate
+from app.service import TaskService
 from app.storage import tasks
 
 # ---------------------
@@ -20,6 +21,10 @@ def get_task_or_404(task_id: int) -> Task:
         raise HTTPException(status_code=404, detail="Task not found")
     return tasks[task_id]
 
+# Dependency Provider
+def get_task_service():
+    return TaskService(tasks)
+
 # ---------------------
 #       3. ENDPOINTS
 # ---------------------
@@ -29,25 +34,25 @@ async def read_root():
     return {"message": "Hello, FastAPI!"}
 
 @ app.get("/tasks", response_model=List[Task])
-async def get_tasks():
-    await asyncio.sleep(0.1)
-    return tasks.values() ### < check
+async def get_tasks(
+    service: TaskService=Depends(get_task_service)):
+    return await service.get_tasks()
 
 @app.get("/tasks/{task_id}", response_model=Task)
-async def get_task_by_id(task_id: int): 
-    await asyncio.sleep(0.1) # simulate DB latency
-    task = get_task_or_404(task_id)
-    return task
+async def get_task_by_id(
+    task_id: int,
+    service: TaskService=Depends(get_task_service)):
+    
+    try:
+        return await service.get_task_by_id(task_id)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @app.post("/tasks", response_model=Task)
-async def create_task(task_data: TaskCreate):
-    await asyncio.sleep(0.3) # simulate DB write delay
-    task_id = len(tasks) + 1 # generate ID dinamically
-    new_task = Task(id=task_id, 
-                    title=task_data.title, 
-                    description=task_data.description)
-    tasks[task_id] = new_task
-    return new_task
+async def create_task(
+    task_data: TaskCreate,
+    service: TaskService=Depends(get_task_service)):
+    return await service.create_task(task_data)
 
 @app.patch(
         "/tasks/{task_id}",
