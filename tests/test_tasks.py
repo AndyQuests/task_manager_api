@@ -1,6 +1,4 @@
-# Test creating a task (POST /tasks) 
 def test_create_task(client):
-    # Create a task to retrieve
     response = client.post("/tasks", json ={
         "title" : "Test task",
         "description" : "Added for retrieval",
@@ -13,7 +11,6 @@ def test_create_task(client):
 #   TEST GET
 # ===============
 
-# Test retreiving all tasks (GET /tasks) 
 def test_get_tasks(client):
     # Create a task to retrieve
     response = client.post("/tasks", json ={
@@ -26,7 +23,6 @@ def test_get_tasks(client):
     assert isinstance(response.json(), list)
     assert any(task["title"] == "Test task" for task in response.json())
 
-# Test retrieving a single task by ID (GET /tasks/{id})
 def test_get_task_by_id_success(client):
     # Create a task to retrieve
     create_response = client.post("/tasks", json={
@@ -39,7 +35,6 @@ def test_get_task_by_id_success(client):
     assert response.status_code == 200
     assert response.json()["title"] == "Task by ID"
 
-# Test requesting a non-existent task ID
 def test_get_task_invalid_id(client):
     response = client.get("/tasks/999")
     assert response.status_code == 404

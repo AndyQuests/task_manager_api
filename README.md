@@ -22,7 +22,7 @@ A RESTful API for managing tasks built with FastAPI.
 
 ## Getting Started
   ```bash
-  git clone <repo-url>
+  git clone https://github.com/andyquests/task_manager_api
   cd task_manager
   ```
 
