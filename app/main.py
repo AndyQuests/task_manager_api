@@ -1,9 +1,9 @@
-from fastapi import FastAPI
-from fastapi import HTTPException # Let us return proper status codes (e.g. 404)
-from typing import List # Let us use List parameter types
 import asyncio
 from app.models import Task, TaskCreate, TaskUpdate
 from app.storage import tasks
+from fastapi import FastAPI
+from fastapi import HTTPException 
+from typing import List 
 
 # ---------------------
 #       1. APP 
@@ -31,7 +31,7 @@ async def read_root():
 @ app.get("/tasks", response_model=List[Task])
 async def get_tasks():
     await asyncio.sleep(0.1)
-    return tasks.values() ### < check
+    return tasks.values()
 
 @app.get("/tasks/{task_id}", response_model=Task)
 async def get_task_by_id(task_id: int): 

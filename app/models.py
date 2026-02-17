@@ -1,6 +1,6 @@
+from enum import Enum
 from pydantic import BaseModel, Field # Pydantic handles input validation
-from enum import Enum # Set symbolic names bound to unique values
-from typing import Optional # Let us use Optional parameter types
+from typing import Optional
 
 class TaskStatus(str, Enum):
     """Represents the lifecycle state of a task"""

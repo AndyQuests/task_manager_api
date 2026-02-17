@@ -1,60 +1,102 @@
-# A FastAPI-based task manager with CRUD operations and validation tests.
+# Task Manager API 
+A RESTful API for managing tasks built with FastAPI.
 
-## **Quickstart**
+## Features
+- CRUD operations: Create, read, update and delete tasks
+- Data validation: Request/response validation with Pydantic models
+- Asynchronous endpoints
+- Comprehensive testing: Unit tests with pytest and load testing with Locust
+- Automatic API Documentation: Interactive Swagger UI
 
+## Tech Stack
+- Python 3.9
+- FastAPI - Modern web framework
+- Pydantic - Data validation
+- pytest - Unit testing
+- Locust - Load testing
+- Uvicorn - ASGI server
+
+## Prerequisites
+- Python 3.9+
+- pip (Python package manager)
+
+## Getting Started
   ```bash
   git clone <repo-url>
   cd task_manager
+  ```
+
+Create and activate a virtual environment:
+  ```bash
+  # On Windows
+  python -m venv task_manager_venv
+  venv\Scripts\activate
+
+  # On macOS/Linux
+  python -m venv task_manager_venv
+  source task_manager_env/bin/activate
+  ```
+
+Install dependencies:
+  ```bash
   pip install -r requirements.txt
+  ```
+
+## Running the API
+Run the server:
+  ```bash
   uvicorn app.main:app --reload
   ```
 
-## **Available endpoints**
-  HTTP method + path + description
+API will be available at: http://localhost:8000
 
+## API Documentation
+Once the server is running, you can access:
+
+- Swagger UI: http://localhost:8000/docs
+
+## Available endpoints
+HTTP method |  Path |  Description
   ```
-  POST   /tasks        → Create a new task
-  GET    /tasks        → List all tasks
-  GET    /tasks/{id}   → Get a single task
-  PATCH  /tasks/{id}   → Update title, description, or status
-  DELETE /tasks/{id}   → Delete a task
+  POST   /tasks          Create a new task
+  GET    /tasks          List all tasks
+  GET    /tasks/{id}     Get a single task
+  PATCH  /tasks/{id}     Update title, description, or status
+  DELETE /tasks/{id}     Delete a task
   ```
 
-## **Validation rules**
+## Validation rules
+* Title: 1–100 chars, required
+* Description: optional, max 300 chars
+* Status: one of `"pending" | "in-progress" | "completed"`
 
-  * Title: 1–100 chars, required
-  * Description: optional, max 300 chars
-  * Status: one of `"pending" | "in-progress" | "completed"`
-
-## **Running tests**
-
+## Unit tests
   ```bash
   pytest -s
   ```
+For more details on the testing strategy, 
+see [app/tests/README.md](app/tests/README.md).
 
-## **Project overview**
-
+## Load Testing
+With the server running, run Locust load tests:
+  ```bash
+  locust -f locustfile.py
   ```
-  app/
-    main.py        → FastAPI app & routes
-    models.py      → Pydantic models
-  tests/
-    test_validation.py  → Data validation
-    test_tasks.py       → Test CRUD
-  ```
+Then open http://localhost:8089 to configure and start the test.
 
-* **Design choices**
-
-  * Unified PATCH endpoint for updates.
-  * Validation handled by Pydantic (string coercion, min/max lengths).
-  * Tests split by responsibility:
-
-    * `test_validation.py`: input validation
-    * `test_tasks.py`: core CRUD
-
-    For more details on the testing strategy, 
-    see [app/tests/README.md](app/tests/README.md).
+## Project overview
+```
+app/
+  main.py        # FastAPI app & routes
+  models.py      # Pydantic models
+  storage.py     # in-memory DB
+tests/
+  conftest.py    # Shared test fixtures
+  test_validation.py  # Input validation
+  test_tasks.py       # Test CRUD
+```
 
 * **Next steps**
-    * Add database support instead of in-memory storage" 
-    * "Implement filtering by status."
+  * Introduce Depencency Injection
+  * Implement search or "filtering by status"
+  * Add database support instead of in-memory storage"
