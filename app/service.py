@@ -38,16 +38,14 @@ class TaskService:
         self.storage[task_id] = new_task
         return new_task
     
-    async def update_task(self, task_id: int, update: TaskUpdate) -> Task:
+    async def update_task(self, task_id: int, update_data: TaskUpdate) -> Task:
         await asyncio.sleep(0.2)
         stored_task = self.get_task_or_404(task_id)
         
-        if update.title is not None:
-            stored_task.title = update.title
-        if update.description is not None:
-            stored_task.description = update.description
-        if update.status is not None:
-            stored_task.status = update.status
+        update_dict = update_data.model_dump(exclude_unset=True)
+        
+        for field, value in update_dict.items():
+            setattr(stored_task, field, value)
         
         return stored_task
     

@@ -68,7 +68,7 @@ HTTP method |  Path |  Description
 
 ## Validation rules
 * Title: 1–100 chars, required
-* Description: optional, max 300 chars
+* Description: optional, must be null or not empty string, max 300 chars
 * Status: one of `"pending" | "in-progress" | "completed"`
 
 ## Unit tests
