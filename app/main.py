@@ -1,27 +1,15 @@
-from app.models import Task, TaskCreate, TaskUpdate
-from app.service import TaskService, TaskNotFoundError
-from app.storage import tasks
-from fastapi import FastAPI, Depends
-from fastapi import HTTPException # Let us return proper status codes
 from typing import List 
 
-# ---------------------
-#       1. APP 
-# ---------------------
+from fastapi import Depends, FastAPI, HTTPException
+
+from app.models import Task, TaskCreate, TaskUpdate
+from app.service import TaskNotFoundError, TaskService 
+from app.storage import tasks
 
 app = FastAPI()
 
-# ---------------------
-#       3. HELPER FUNCTIONS
-# ---------------------
-
-# Dependency Provider
-def get_task_service():
+def get_task_service() -> TaskService:
     return TaskService(tasks)
-
-# ---------------------
-#       3. ENDPOINTS
-# ---------------------
 
 @app.get("/")
 async def read_root():
