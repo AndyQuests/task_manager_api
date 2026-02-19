@@ -3,8 +3,9 @@ A RESTful API for managing tasks built with FastAPI.
 
 ## Features
 - CRUD operations: Create, read, update and delete tasks
-- Data validation: Request/response validation with Pydantic models
+- Data validation with Pydantic
 - Asynchronous endpoints
+- Dependency Injection
 - Comprehensive testing: Unit tests with pytest and load testing with Locust
 - Automatic API Documentation: Interactive Swagger UI
 
@@ -89,6 +90,7 @@ Then open http://localhost:8089 to configure and start the test.
 app/
   main.py        # FastAPI app & routes
   models.py      # Pydantic models
+  service.py     # Business logic
   storage.py     # in-memory DB
 tests/
   conftest.py    # Shared test fixtures
@@ -97,6 +99,5 @@ tests/
 ```
 
 * **Next steps**
-  * Introduce Depencency Injection
   * Implement search or "filtering by status"
   * Add database support instead of in-memory storage"

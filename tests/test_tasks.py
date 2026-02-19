@@ -116,7 +116,7 @@ def test_delete_task_success(client):
     })
     assert client.get("/tasks/1").status_code == 200
     response = client.delete("/tasks/1")
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert client.get("/tasks/1").status_code == 404
 
 def test_delete_task_non_existent(client):
@@ -130,5 +130,5 @@ def test_delete_task_twice(client):
     })
 
     assert client.get("/tasks/1").status_code == 200
-    assert client.delete("/tasks/1").status_code == 200
+    assert client.delete("/tasks/1").status_code == 204
     assert client.delete("/tasks/1").status_code == 404
