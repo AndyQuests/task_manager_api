@@ -94,8 +94,9 @@ app/
   storage.py     # in-memory DB
 tests/
   conftest.py    # Shared test fixtures
-  test_validation.py  # Input validation
-  test_tasks.py       # Test CRUD
+  test_service.py     # Bussiness logic unit tests
+  test_tasks.py       # API endpoints
+  test_validation.py  # API validation
 ```
 
 * **Next steps**
